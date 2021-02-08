@@ -68,6 +68,68 @@ struct CardView: View {
 }
 ```
 
+### Group
+Group is like a ZStack or any of these other things in that its function argument here is a View builder.
+It does not lay the children out or try to position them in any way.
+It's good for grouping things
+```swift
+struct EmojiMemoryGameView: View {
+	var body: some View {
+		Grid(items: viewModel.cards) { card in
+			CardView(card)
+		}
+	}
+}
+
+struct Grid<Item, ItemView>: View where Item: Identifiable, ItemView: View {
+	var items: [Item]
+	var viewForItem: (Item) -> ItemView
+	
+	// This function is going to escape from this initializer.
+	// Whatever code is in the function has to be able to be called later.
+	// The functions that can be called later live in the heap and they have pointers to them.
+	// All the things inside the function have be kept in the heap.
+	// If anything in the function points back, we've got a situation where two things in the heap are pointing to each other.
+	// They're never gonna be able to go away. (memory cycle)
+	init(_ items: [Item], viewForItem: @escaping (Item) -> ItemView) {
+	}
+
+	var body: some View {
+		GeometryReader { geometry in
+			self.body(for: GridLayout(itemCount: items.count, in: geometry.size))
+		}
+	}
+
+	func body(for layout: GridLayout) -> some View {
+		ForEach(items) { item in
+			self.body(for: item, in: layout)
+		}
+	}
+
+	func body(for item: Item, in layout: GridLayout) -> some View {
+		let index = items.firstIndex(matching: item)
+		return Group {
+			// What does Group do if index is nil?
+			// It's gonna return a group that has some sort of empty content.
+			if index != nil {
+				viewForItem(item)
+					.frame(width: layout.itemSize.width, height: layout.itemSize.height)
+					.position(layout.location(ofItemAt: index))
+			}
+		}
+	}
+}
+
+struct GridLayout {
+	var size: CGSize
+	var rowCount: Int = 0
+	var columnCount: Int = 0
+	var itemSize: CGSize {}
+
+	func location(ofItemAt index: Int) -> CGPoint {}
+}
+```
+
 ### Modifier
 Modifiers essentially "contain" the View they modify.
 ```swift
