@@ -7,31 +7,31 @@
 // Something like a ContentView functions like a View or it behaves like a View.
 // ContentView behaves like a View. A View is jus t a rectangle area on screen. 
 struct ContentView: View {
-	var body: some View {
-		HStack {
-			ForEach(0..<4) { idx in
-				CardView()
-			}
-		}
-	}
+  var body: some View {
+    HStack {
+      ForEach(0..<4) { idx in
+        CardView()
+      }
+    }
+  }
 }
 
 struct CardView: View {
-	var isFaceUp: Bool
-	var body: some View {
-		ZStack {
-			if isFaceUp {
-				RoundedRectangle(cornerRadius: 10.0).fill(Color.white)
-				RoundedRectangle(cornerRadius: 10.0).stroke(lineWidth: 3)
-				Text("")
-			} else {
-				RoundedRectangle(cornerRadius: 10.0).fill()
-			}
-		}
-        // Views inside of ZStack use foregroundColor orange.
-        // It gets passed down into the environment for all the views on the inside of ZStack.
-        .foregroundColor(Color.orange)
-	}
+  var isFaceUp: Bool
+  var body: some View {
+    ZStack {
+      if isFaceUp {
+        RoundedRectangle(cornerRadius: 10.0).fill(Color.white)
+        RoundedRectangle(cornerRadius: 10.0).stroke(lineWidth: 3)
+        Text("")
+      } else {
+        RoundedRectangle(cornerRadius: 10.0).fill()
+      }
+    }
+    // Views inside of ZStack use foregroundColor orange.
+    // It gets passed down into the environment for all the views on the inside of ZStack.
+    .foregroundColor(Color.orange)
+  }
 }
 ```
 

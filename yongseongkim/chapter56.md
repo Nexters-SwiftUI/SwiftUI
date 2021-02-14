@@ -13,8 +13,8 @@ It builds that list of Views into a single View.
 ```swift
 // https://www.swiftbysundell.com/tips/adding-swiftui-viewbuilder-to-functions/
 private extension SongRow {
-	// we need to use AnyView to perform type erasure in order to give both of our code branches the same return type.
-	// Opaque result type inferred to be AnyView.
+  // we need to use AnyView to perform type erasure in order to give both of our code branches the same return type.
+  // Opaque result type inferred to be AnyView.
   func makeButtonLabel() -> some View {
     if isPlaying {
       return AnyView(PauseIcon())
@@ -27,9 +27,9 @@ private extension SongRow {
 private extension SongRow {
   @ViewBuilder func makeButtonLabel() -> some View {
     if isPlaying {
-        PauseIcon()
+      PauseIcon()
     } else {
-        PlayIcon()
+      PlayIcon()
     }
   }
 }
@@ -39,18 +39,18 @@ private extension SongRow {
 // It would return a TupleView<RoundedRectangle, RoundedRectangle, Text>
 @ViewBuilder
 func front(of card: Card) -> some View {
-	RoundedRectange(cornerRadius: 10)
-	RoundedRectange(cornerRadius: 10)
-	Text(card.text)
+  RoundedRectange(cornerRadius: 10)
+  RoundedRectange(cornerRadius: 10)
+  Text(card.text)
 }
 ```
 - When there's an if-else, ConditionalContent
 ```swift
 @ViewBuilder
 func body(for size: CGSize) -> some View {
-	if card.isFaceUp || !card.isMatched {
-		ZStack { ... }
-	}
+  if card.isFaceUp || !card.isMatched {
+    ZStack { ... }
+  }
 }
 ```
 - If there's nothing at all, EmptyView
@@ -64,7 +64,7 @@ func builder() -> some View {
 // GeometryReader allow to use ViewBuilder syntax
 // ZStack, HStack, VStack, ForEach, Group all do this same thing.
 struct GeometryReader<Content> where Content: View {
-	init(@ViewBuilder: content: @escaping (GeometryProxy) -> Content)
+  init(@ViewBuilder: content: @escaping (GeometryProxy) -> Content)
 }
 ```
 - [Why didn't we do this(ViewBuilder) in Grid?](https://youtu.be/oDKDGCRdSHc?t=1131)
@@ -82,31 +82,31 @@ The Shape protocol implements View's body var for you. You are required to imple
 ```swift
 // Draw a pie like Pac-Man.
 struct Pie: Shape {
-	var startAngle: Angle
-	var endAngle: Angle
-	var clockwise: Bool = false
-	// That is the rect in which we're supposed to fit our Shape.
-	// add lines, arcs, besizer curves, etc.
-	func path(in rect: CGRect) -> Path {
-		let center = CGPoint(x: rect.midX, y: rect.midY)
-		let radius = min(rect.width, rect.height) / 2
-		let start = CGPoint(
-			x: center.x + radius * cos(CGFloat(startAngle.radians)),
-			y: center.y + radius * sin(CGFloat(startAngle.radians))
-		)
-		var p = Path()
-		p.move(to: center)
-		p.addLine(to: start)
-		p.addArc(
-			center: center,
-			radius: radius,
-			startAngle: startAngle,
-			endAngle: endAngle,
-			clockwise: clockwise
-		)
-		p.addLine(to: center)
-		return p
-	}
+  var startAngle: Angle
+  var endAngle: Angle
+  var clockwise: Bool = false
+  // That is the rect in which we're supposed to fit our Shape.
+  // add lines, arcs, besizer curves, etc.
+  func path(in rect: CGRect) -> Path {
+    let center = CGPoint(x: rect.midX, y: rect.midY)
+    let radius = min(rect.width, rect.height) / 2
+    let start = CGPoint(
+      x: center.x + radius * cos(CGFloat(startAngle.radians)),
+      y: center.y + radius * sin(CGFloat(startAngle.radians))
+    )
+    var p = Path()
+    p.move(to: center)
+    p.addLine(to: start)
+    p.addArc(
+      center: center,
+      radius: radius,
+      startAngle: startAngle,
+      endAngle: endAngle,
+      clockwise: clockwise
+    )
+    p.addLine(to: center)
+    return p
+  }
 }
 
 var body: some View {
@@ -168,53 +168,53 @@ struct Cardify: ViewModifier {
 ```swift
 // ViewBuilder
 extension View {
-		@ViewBuilder func visibleOrInvisible(_ isVisible: Bool) -> some View {
-        if isVisible {
-            self
-        } else {
-						// hidden: they do remain in the view hierarchy and affect layout.
-            self.hidden()
-        }
+  @ViewBuilder func visibleOrInvisible(_ isVisible: Bool) -> some View {
+    if isVisible {
+      self
+    } else {
+      // hidden: they do remain in the view hierarchy and affect layout.
+      self.hidden()
     }
+  }
 
-    @ViewBuilder func visibleOrGone(_ isVisible: Bool) -> some View {
-        if isVisible {
-            self
-        }
+  @ViewBuilder func visibleOrGone(_ isVisible: Bool) -> some View {
+    if isVisible {
+      self
     }
+  }
 }
 
 struct ContentView: Vie {
-	var isVisible: Bool
+  var isVisible: Bool
 
-	var body: some View {
-		Text("")
-			.visibleOrGone(isVisible)
-	}
+  var body: some View {
+    Text("")
+      .visibleOrGone(isVisible)
+  }
 }
 
 // ViewModifier
 struct VisibleOrInvisible: ViewModifier {
-    var isVisible: Bool
+  var isVisible: Bool
     
-    func body(content: Content) -> some View {
-        Group {
-            if isVisible {
-                content
-            } else {
-                content.hidden()
-            }
-        }
+  func body(content: Content) -> some View {
+    Group {
+      if isVisible {
+        content
+      } else {
+        content.hidden()
+      }
     }
+  }
 }
 
 struct ContentView: View {
-    var isVisible: Bool
+  var isVisible: Bool
     
-    var body: some View {
-        Text("")
-            .modifier(VisibleOrInvisible(isVisible: isVisible))
-    }
+  var body: some View {
+    Text("")
+      .modifier(VisibleOrInvisible(isVisible: isVisible))
+  }
 }
 ```
 
@@ -244,9 +244,9 @@ Animation only works for Views that are in a container that is already on screen
 // A container just propagates the `.animation` modifier to all the Views it contains.
 // It works like `.font`
 Text("...")
-	.opacity(scary ? 1 : 0)
-	.rotationEffect(Angle.degrees(upsideDown ? 180 : 0))
-	.animation(Animation.easeInOut)
+  .opacity(scary ? 1 : 0)
+  .rotationEffect(Angle.degrees(upsideDown ? 180 : 0))
+  .animation(Animation.easeInOut)
 ```
 - Explicit Animation
   - The second one is explicitly, where we are going to call some code that is going to result in some changes to ViewModifiers, Shapes or Views are gonna be coming and going. We are gonna wrap that code by calling the function withAnimation. Inside the curly braces there, we're gonna put the code and that's going to cause all the things that would change all those ViewModifier arguments that change, all the Views come and go. They're all gonna happen together in one concurrent animation. Explicit animation is where we cause an animation to happen all with the same duration and curve for a whole bunch of Views.
@@ -255,8 +255,8 @@ Text("...")
 // Even if there's an explicit animation going on at the same time, It's gonna have no effect on them.
 // Implicitly animations always win.
 withAnimation(.linear(duration: 2) {
-	// do something that will cause ViewModifier/Shape arguments to change some.
-	self.viewModel.resetGame()
+  // do something that will cause ViewModifier/Shape arguments to change some.
+  self.viewModel.resetGame()
 }
 ```
 
@@ -278,12 +278,12 @@ Unlike animation, transition does not get redistributed to a container's content
 // it is talking about the transition when the entire ZStack comes on screen or goes off screen.
 // It does not distribute it off into its things inside.
 ZStack {
-	if isFaceUp {
-		RoundedRectangle() // default transition is .opacity
-		Text().transition(.scale)
-	} else {
-		RoundedRectangle(cornerRadius: 10).transition(.identity)
-	}
+  if isFaceUp {
+    RoundedRectangle() // default transition is .opacity
+    Text().transition(.scale)
+  } else {
+    RoundedRectangle(cornerRadius: 10).transition(.identity)
+  }
 }
 ```
 Group and ForEach, they do distribute `.transition` to their content View.
@@ -311,30 +311,30 @@ And piecing it together into like a little movie which is the animation.
 The communication between the animation system and ViewModifiers and Shape is just `animatableData` variable in protocol `Animatable`.
 ```swift
 struct Cardify: ViewModifier, Animatable {
-	var rotation: Double
-	var isFaceUp: Bool {
-		rotation < 90
-	}
+  var rotation: Double
+  var isFaceUp: Bool {
+    rotation < 90
+  }
 
-	// Just renamed rotation to be animatableData.
-	// animatableData is the name that the animation systems is going to look for.
-	var animatableData: Double {
-		get { return rotation }
-		set { rotation = newValue }
-	}
+  // Just renamed rotation to be animatableData.
+  // animatableData is the name that the animation systems is going to look for.
+  var animatableData: Double {
+    get { return rotation }
+    set { rotation = newValue }
+  }
 
-	func body(content: Content) -> some View {
-		// Flip animation.
-		ZStack {
-			if isFaceUp {
-				RoundedRectangle().fill(Color.white)
-				content
-			} else {
-				RoundedRectangle().fill(Color.orange)
-			}
-			.rotation3DEffect(Angle.degrees(rotation), axis: (0, 1, 0))
-		}
-	}
+  func body(content: Content) -> some View {
+    // Flip animation.
+    ZStack {
+      if isFaceUp {
+        RoundedRectangle().fill(Color.white)
+        content
+      } else {
+        RoundedRectangle().fill(Color.orange)
+      }
+      .rotation3DEffect(Angle.degrees(rotation), axis: (0, 1, 0))
+    }
+  }
 }
 ```
 
