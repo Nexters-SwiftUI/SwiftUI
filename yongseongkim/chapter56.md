@@ -110,18 +110,18 @@ struct Pie: Shape {
 }
 
 var body: some View {
-	// Why we substract 90 degrees? https://youtu.be/oDKDGCRdSHc?t=2384
-	// The first thing to understand in iOS is that Angle Zero is out to the right
-	// To be in the kind of degrees Where zero is straight up, we're gonna have to subtract 90 degrees.
-	Pie(
-		startAngle: Angle.degrees(0-90),
-		endAngle: Angle.degrees(110-90),
-		// Why we use clockwise? https://youtu.be/oDKDGCRdSHc?t=2430
-		// In iOS System, the drawing coordinate system that you're drawing has (0,0) is the upper left and is upside down.
-		// Starting up here at (0,0), Y is getting bigger as we get down.
-		// So since this whole thing is upside down, clockwise and counterclockwise are going the other way as well.
-		clockwise: true
-	)
+  // Why we substract 90 degrees? https://youtu.be/oDKDGCRdSHc?t=2384
+  // The first thing to understand in iOS is that Angle Zero is out to the right
+  // To be in the kind of degrees Where zero is straight up, we're gonna have to subtract 90 degrees.
+  Pie(
+    startAngle: Angle.degrees(0-90),
+    endAngle: Angle.degrees(110-90),
+    // Why we use clockwise? https://youtu.be/oDKDGCRdSHc?t=2430
+    // In iOS System, the drawing coordinate system that you're drawing has (0,0) is the upper left and is upside down.
+    // Starting up here at (0,0), Y is getting bigger as we get down.
+    // So since this whole thing is upside down, clockwise and counterclockwise are going the other way as well.
+    clockwise: true
+  )
 }
 ```
 
@@ -133,34 +133,35 @@ Text("")
 
 // The ViewModifier protocol has one function in it
 protocol ViewModifier {
-	// Protocol doesn't care what type Content is.
-	associatedtype Content
+  // Protocol doesn't care what type Content is.
+  associatedtype Content
 
-	func body(content: Content) -> some View {
-		// return some View that represents a modification fo content
-	}
+  func body(content: Content) -> some View {
+    // return some View that represents a modification fo content
+    return content
+  }
 }
 ```
 
 ```swift
 // .modifier() returns a View that displays the body result.
 Text("")
-	// .aspectRatio(2/3) = .modifier(AspectModifier(2/3))
-	.modifier(Cardify(isFaceUp: true))
+  // .aspectRatio(2/3) = .modifier(AspectModifier(2/3))
+  .modifier(Cardify(isFaceUp: true))
 
 struct Cardify: ViewModifier {
-	var isFaceUp: Bool
-	func body(content: Content) -> some View {
-		ZStack {
-			if isFaceUp { 
-				Pie()
-				...
-				content
-			} else {
-				...
-			}
-		}
-	}
+  var isFaceUp: Bool
+  func body(content: Content) -> some View {
+    ZStack {
+      if isFaceUp { 
+        Pie()
+        /* ... */
+        content
+      } else {
+        /* ... */
+      }
+    }
+  }
 }
 ```
 
